@@ -9,6 +9,9 @@ import org.testng.annotations.Test;
 import pages.*;
 import org.openqa.selenium.support.PageFactory;
 
+import static pages.BasePage.assertLink;
+
+
 public class LoginPageTest extends Driver{
     @BeforeClass
     public void bc(){
@@ -18,13 +21,16 @@ public class LoginPageTest extends Driver{
     @Test
     public void loginTest_success(){
         PageFactory.initElements(Driver.get(), LoginPage.class).fillEmailPassword(User.builder().email("mara@gmail.com").password("Mmar123456$").build())
-                .clickLogin().assertLink("contacts");
+                .clickLogin();
+        assertLink("contacts");
     }
-//    @Test
-//    public void loginTest_negative(){
-//        new LoginPage().fillEmailPassword(User.builder().email("mara@gmail.com").password("Mmar123456$").build())
-//                .clickLogin().assertLink("login");
-//    }
+    @Test
+    public void loginTest_negative(){
+        new LoginPage().fillEmailPassword(User.builder().email("maragmail.com").password("Mmar123456$").build())
+                .clickLogin();
+        assertLink("login"); //!!! Переделать идею с интерфейсом Разобраться так чтобы У интерфейса Был Доступ ко всем методам детей
+        new LoginPage().isLoginPasswordAlertPresent();
+    }
     @AfterMethod
     public void at(){
         PageFactory.initElements(Driver.get(), ContactsPage.class).signOut();

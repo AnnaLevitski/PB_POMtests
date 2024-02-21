@@ -5,15 +5,31 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.LoadableComponent;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import java.time.Duration;
 import java.util.List;
 
-public class ContactsPage extends BasePage implements Page{
+public class ContactsPage extends BasePage{
+    BasePage bp = new BasePage();
     public ContactsPage() {
         PageFactory.initElements(Driver.get(), this);
+    }
+
+    @Override
+    protected void load() {
+        Driver.get().get("https://telranedu.web.app/contacts");
+    }
+
+    @Override
+    protected void isLoaded() throws Error {
+        try {
+            Assert.assertTrue(buttonSignOut.isDisplayed());
+        }catch (Exception e){
+
+        }
     }
 
     @FindBy(linkText = "/contacts") WebElement tabContacts;
@@ -22,6 +38,7 @@ public class ContactsPage extends BasePage implements Page{
     @FindBy(xpath = "//button[normalize-space()='Edit']") WebElement buttonEdit;
     @FindBy(xpath = "//div[@class='contact-item_card__2SOIM']") List<WebElement> contactsList;
     @FindBy(xpath = "//div[1][@class='contact-item_card__2SOIM']") WebElement contactItem;
+    @FindBy(className = "contact-item-detailed_card__50dTS") WebElement contactCard;
 
     public void isTabContactsPresent(){
         Assert.assertTrue(buttonSignOut.isDisplayed());
@@ -35,38 +52,22 @@ public class ContactsPage extends BasePage implements Page{
         int countContactsBefore = countContacts()-1;
         contactItem.click();
         buttonRemove.click();
-        pause(1000);
+        WebDriverWait webDriverWait = new WebDriverWait(Driver.get(), Duration.ofSeconds(10));
+        webDriverWait.until(ExpectedConditions.invisibilityOf(contactCard));
         int countContactsAfter = countContacts();
         Assert.assertEquals(countContactsBefore, countContactsAfter);
         return this;
-
     }
 
     public void signOut(){
-        if(buttonSignOut.isDisplayed())
-            buttonSignOut.click();
+        try{
+            if(buttonSignOut.isDisplayed()){
+                buttonSignOut.click();
+            }
+        }catch (Exception e){
+
+        }
     }
 
-    @Override
-    public boolean isLink(String page) {
-        return getLink()==page;
-    }
-    @Override
-    public void assertLink(String page) {
-        pause(30);
-        Assert.assertTrue(new WebDriverWait(Driver.get(), Duration.ofSeconds(20))
-                .until(ExpectedConditions.urlContains(page)));
-    }
-    @Override
-    public void assertLink() {
-        new WebDriverWait(Driver.get(), Duration.ofSeconds(20))
-                .until(ExpectedConditions.urlContains("contacts"));
-        System.out.println("contacts");
-    }
 
-    @Override
-    public String getLink() {
-        String[] arr = Driver.get().getCurrentUrl().split("/");
-        return arr[arr.length -1];
-    }
 }

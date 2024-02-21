@@ -18,6 +18,6 @@ public class ContactPageTests extends Driver{
 
     @Test
     public void removeContact_success(){
-        PageFactory.initElements(Driver.get(), ContactsPage.class).removeContact();
+        PageFactory.initElements(Driver.get(), ContactsPage.class).get().removeContact();
     }
 }

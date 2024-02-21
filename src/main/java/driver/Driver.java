@@ -5,6 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
+import java.util.concurrent.TimeUnit;
+
 public class Driver {
     private static WebDriver driver;
     //private static ITestContext context; //?
@@ -25,6 +27,7 @@ public class Driver {
     @BeforeClass(alwaysRun = true)
     public static void setUp(){
         String url = ConfigurationReader.getProperty("url");
+        Driver.get().manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         Driver.get().navigate().to(url);
     }
     @AfterClass(alwaysRun = true)
