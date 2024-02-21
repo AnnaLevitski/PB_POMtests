@@ -65,24 +65,20 @@ public class TestBaseOKHttp {
                 .post(body)
                 .build();
         Response response = client.newCall(request).execute();
-        if(response.isSuccessful()){
-            return response;
-        }
         if (!response.isSuccessful()) {
-            Request request2 = new Request.Builder()
+            request = new Request.Builder()
                     .url(baseURL + additionalURL)
                     .post(body)
                     .addHeader("Authorization", token)
                     .build();
-            Response response2 = client.newCall(request2).execute();
-            if (!response2.isSuccessful() && firstShot) {
+            response = client.newCall(request).execute();
+            if (!response.isSuccessful() && firstShot) {
                 getNewToken();
                 getRequest(additionalURL);
                 firstShot = false;
             }
-            return response2;
         }
-        return null;
+        return response;
     }
 
     public Object deleteRequest(String additionalURL) throws IOException {
@@ -91,24 +87,20 @@ public class TestBaseOKHttp {
                 .delete()
                 .build();
         Response response = client.newCall(request).execute();
-        if(response.isSuccessful()){
-            return response;
-        }
         if (!response.isSuccessful()) {
-            Request request2 = new Request.Builder()
+            request = new Request.Builder()
                     .url(baseURL + additionalURL)
                     .delete()
                     .addHeader("Authorization", token)
                     .build();
-            Response response2 = client.newCall(request2).execute();
-            if (!response2.isSuccessful() && firstShot) {
+            response = client.newCall(request).execute();
+            if (!response.isSuccessful() && firstShot) {
                 getNewToken();
                 getRequest(additionalURL);
                 firstShot = false;
             }
-            return response2;
         }
-        return null;
+        return response;
     }
     public int randomInt(){
         Random r = new Random();
